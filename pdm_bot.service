@@ -1,0 +1,10 @@
+[Unit]
+Description=Bot de Telegram para o Papo de Mercado
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pdmbot/.pyenv/shims/python /home/pdmbot/bot-telegram/pdm_bot.py
+
+[Install]
+WantedBy=multi-user.target
