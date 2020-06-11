@@ -3,8 +3,9 @@ Description=Bot de Telegram para o Papo de Mercado
 After=multi-user.target
 
 [Service]
-Type=idle
-ExecStart=/home/pdmbot/.pyenv/shims/python3 /home/pdmbot/bot-telegram/pdm_bot.py
+Type=simple
+User=fooservice
+ExecStart=/home/pdmbot/.pyenv/versions/pdm_env/bin/python3 /home/pdmbot/bot-telegram/pdm_bot.py
 
 [Install]
 WantedBy=multi-user.target
