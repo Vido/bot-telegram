@@ -99,7 +99,7 @@ def info(update, context):
     Return the commodity information
     """
     commodities = get_all_data()
-    arg = context.args[0]
+    arg = context.args[0].upper()
     commodities = list(filter(lambda c: c.acronym ==
                               arg[:-3] and c.due_date == arg[-3:], commodities))
     if len(commodities) == 0:
