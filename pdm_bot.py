@@ -105,7 +105,7 @@ def info(update, context):
         commodities = list(filter(lambda c: c.acronym ==
                             arg[:-3] and c.due_date == arg[-3:], commodities))
 
-    elif len(commodities) == 0:
+    if len(commodities) == 0:
         context.bot.send_message(
             chat_id=update.effective_chat.id, text=f'Não foi encontrado contrato com o código: {arg[:-3]} e vencimento {arg[-3:]}')
 
