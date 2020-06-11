@@ -75,23 +75,21 @@ def list_all(update, context):
     List all commodities in chat
     """
     commodities = get_all_data()
-    context.bot.send_message(
-        chat_id=update.effective_chat.id, text="A lista de mercadorias é:")
     all_titles = sorted(list(set([c.name for c in commodities])))
-    for title in all_titles:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=title)
+    context.bot.send_message(chat_id=update.effective_chat.id,
+        text='\n'.join(all_titles))
 
 
 def help(update, context):
     """
     Return the manual of utilization
     """
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text='Você pode digitar /listar para listar todos as mercadorias ou ...')
-    context.bot.send_message(chat_id=update.effective_chat.id,
-                             text='digitar /info CODIGOVENCIMENTO  para obter o valor.')
+    text = 'Você pode digitar:\n' \
+    '/listar - lista todos os contratos BM&F\n' \
+    '/info CODIGOVENCIMENTO - para obter o valor do ajuste.'
+
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text='exemplo:  /info VALEOG20')
+        chat_id=update.effective_chat.id, text=text)
 
 
 def info(update, context):
@@ -100,11 +98,16 @@ def info(update, context):
     """
     commodities = get_all_data()
     arg = context.args[0].upper()
-    commodities = list(filter(lambda c: c.acronym ==
-                              arg[:-3] and c.due_date == arg[-3:], commodities))
-    if len(commodities) == 0:
+
+    if arg in ['OZ1D', 'OZ2D', 'OZ2D']:
+        commodities = [arg]
+    else:
+        commodities = list(filter(lambda c: c.acronym ==
+                            arg[:-3] and c.due_date == arg[-3:], commodities))
+
+    elif len(commodities) == 0:
         context.bot.send_message(
-            chat_id=update.effective_chat.id, text=f'Não foi encontrado mercadoria com o código: {arg[:-3]} e vencimento {arg[-3:]}')
+            chat_id=update.effective_chat.id, text=f'Não foi encontrado contrato com o código: {arg[:-3]} e vencimento {arg[-3:]}')
 
     for commodity in commodities:
         text = f'Mercadoria: {commodity.name}\n' \
@@ -126,6 +129,7 @@ def main():
     updater = Updater(API_KEY, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', help))
+    dp.add_handler(CommandHandler('help', help))
     dp.add_handler(CommandHandler('listar', list_all))
     dp.add_handler(CommandHandler('info', info))
     updater.start_polling()
