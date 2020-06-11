@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-User=fooservice
+User=pdmbot
 ExecStart=/home/pdmbot/.pyenv/versions/pdm_env/bin/python3 /home/pdmbot/bot-telegram/pdm_bot.py
 
 [Install]
