@@ -100,7 +100,7 @@ def info(update, context):
     arg = context.args[0].upper()
 
     if arg in ['OZ1D', 'OZ2D', 'OZ2D']:
-        commodities = [arg]
+        commodities = list(filter(lambda c: c.acronym == arg, commodities))
     else:
         commodities = list(filter(lambda c: c.acronym ==
                             arg[:-3] and c.due_date == arg[-3:], commodities))
