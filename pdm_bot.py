@@ -99,15 +99,15 @@ def info(update, context):
     commodities = get_all_data()
     arg = context.args[0].upper()
 
-    if arg in ['OZ1D', 'OZ2D', 'OZ2D']:
-        commodities = list(filter(lambda c: c.acronym == arg, commodities))
-    else:
-        commodities = list(filter(lambda c: c.acronym ==
+    commodities = list(filter(lambda c: c.acronym ==
                             arg[:-3] and c.due_date == arg[-3:], commodities))
 
     if len(commodities) == 0:
-        context.bot.send_message(
-            chat_id=update.effective_chat.id, text=f'Não foi encontrado contrato com o código: {arg[:-3]} e vencimento {arg[-3:]}')
+        text=f'Não foi encontrado contrato com o código: {arg[:-3]} e vencimento {arg[-3:]}'
+        if arg in set(['OZ1D', 'OZ2D', 'OZ3D']):
+            text=f'OZ1D, OZ2D e OZ3D são mercadorias Disponíveis. Os contratos futuros são OZ1 + código do vencimento'
+
+        context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
     for commodity in commodities:
         text = f'Mercadoria: {commodity.name}\n' \
