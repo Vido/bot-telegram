@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
+import os
 import requests
 from bs4 import BeautifulSoup
 from functools import lru_cache
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 from cachetools import TTLCache, cached
-import os
+
+from decouple import config
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
 
-API_KEY = os.getenv('API_KEY')
-
+API_KEY = config('API_KEY')
 
 class Commodity:
     """
@@ -104,20 +105,17 @@ def info(update, context):
     if len(commodities) == 0:
         context.bot.send_message(
             chat_id=update.effective_chat.id, text=f'Não foi encontrado mercadoria com o código: {arg[:-3]} e vencimento {arg[-3:]}')
-    for commodity in commodities:
-        context.bot.send_message(
-            chat_id=update.effective_chat.id, text=f'Mercadoria: {commodity.name} 🚀')
-        context.bot.send_message(
-            chat_id=update.effective_chat.id, text=f'Vencimento: {commodity.due_date}')
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text=f'Preço de ajuste anterior: {commodity.previous_adjustment_price}')
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text=f'Preço de ajuste Atual: {commodity.current_adjustment_price}')
-        context.bot.send_message(
-            chat_id=update.effective_chat.id, text=f'Variação: {commodity.variation}')
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text=f'Valor do ajuste por contrato (R$): {commodity.contract_adjustment_amount}')
 
+    for commodity in commodities:
+        text = f'Mercadoria: {commodity.name}\n' \
+        f'Vencimento: {commodity.due_date}\n' \
+        f'Preço de ajuste anterior: {commodity.previous_adjustment_price}\n' \
+        f'Preço de ajuste Atual: {commodity.current_adjustment_price}\n' \
+        f'Variação: {commodity.variation}\n' \
+        f'Valor do ajuste por contrato (R$): {commodity.contract_adjustment_amount}'
+
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text=text)
 
 """
 Create all events
