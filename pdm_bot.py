@@ -86,26 +86,25 @@ def help(update, context):
     """
     text = 'Você pode digitar:\n' \
     '/listar - lista todos os contratos BM&F\n' \
-    '/info CODIGOVENCIMENTO - para obter o valor do ajuste.'
+    '/ajuste CODIGOVENCIMENTO - para obter o valor do ajuste.'
 
     context.bot.send_message(
         chat_id=update.effective_chat.id, text=text)
 
 
-def info(update, context):
+def ajuste(update, context):
     """
     Return the commodity information
     """
 
-    if not args:
-        text = '/info CODIGOVENCIMENTO - para obter o valor do ajuste. \n' \
-        'exemplo: /info DOLN20 (Dolar vencimento 01/07/2020)' 
+    if not context.args:
+        text = '/ajuste CODIGOVENCIMENTO - para obter o valor do ajuste. \n' \
+        'exemplo: /ajuste DOLN20 (Dolar vencimento 01/07/2020)' 
         context.bot.send_message(chat_id=update.effective_chat.id, text=text)
         return
 
     arg = context.args[0].upper()
     commodities = get_all_data()
-
     commodities = list(filter(lambda c: c.acronym ==
                             arg[:-3] and c.due_date == arg[-3:], commodities))
 
@@ -138,7 +137,7 @@ def main():
     dp.add_handler(CommandHandler('start', help))
     #dp.add_handler(CommandHandler('help', help))
     dp.add_handler(CommandHandler('listar', list_all))
-    dp.add_handler(CommandHandler('info', info))
+    dp.add_handler(CommandHandler('ajuste', ajuste))
     updater.start_polling()
     updater.idle()
 
