@@ -96,8 +96,15 @@ def info(update, context):
     """
     Return the commodity information
     """
-    commodities = get_all_data()
+
+    if not args:
+        text = '/info CODIGOVENCIMENTO - para obter o valor do ajuste. \n' \
+        'exemplo: /info DOLN20 (Dolar vencimento 01/07/2020)' 
+        context.bot.send_message(chat_id=update.effective_chat.id, text=text)
+        return
+
     arg = context.args[0].upper()
+    commodities = get_all_data()
 
     commodities = list(filter(lambda c: c.acronym ==
                             arg[:-3] and c.due_date == arg[-3:], commodities))
@@ -129,7 +136,7 @@ def main():
     updater = Updater(API_KEY, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', help))
-    dp.add_handler(CommandHandler('help', help))
+    #dp.add_handler(CommandHandler('help', help))
     dp.add_handler(CommandHandler('listar', list_all))
     dp.add_handler(CommandHandler('info', info))
     updater.start_polling()
